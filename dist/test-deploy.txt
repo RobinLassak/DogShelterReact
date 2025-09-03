@@ -1,1 +1,1 @@
-Prvni deploy projektu na endoru - test
+Druhy deploy projektu na endoru - test
