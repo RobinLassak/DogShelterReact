@@ -1,7 +1,8 @@
 .list {
   display: flex;
   flex-direction: column;
-  width: 500px;
+  width: 100%;
+  max-width: 500px;
 }
 
 .item {
@@ -24,4 +25,24 @@
   height: 25px !important;
   width: 25px !important;
   cursor: pointer !important;
+}
+
+/* Mobilní optimalizace */
+@media (max-width: 768px) {
+  .list {
+    max-width: 100%;
+    margin: 0 15px;
+  }
+  
+  .item {
+    height: 50px;
+    padding: 0 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .item {
+    height: 55px;
+    padding: 0 8px;
+  }
 }
