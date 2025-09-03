@@ -1,7 +1,6 @@
 # Ignorovat nepotřebné soubory a složky
 node_modules/
 eslint.config.js
-vite.config.js
 
 # Ignorovat cache a dočasné soubory
 .cache/
