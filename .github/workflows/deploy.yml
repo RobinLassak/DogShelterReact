@@ -1,8 +1,10 @@
 name: Deploy to Endora (DogsShelterReact)
+
 on:
   push:
     branches: [master]
   workflow_dispatch: {}
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -12,11 +14,16 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
-          cache: 'npm'
+          node-version: "20" # aktuální LTS
+          cache: "npm"
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
 
       - name: Build project
         run: npm run build
@@ -29,13 +36,9 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftps
           port: 21
-          server-dir: ${{ secrets.FTP_DIR }}DogsShelterReact/
-          local-dir: ./dist/
-          # necháme explicitně vypnuté pro jistotu
-          dangerous-clean-slate: false
+          server-dir: ${{ secrets.FTP_DIR }}DogsShelterReact/ # ujisti se, že tato složka na FTP existuje
+          local-dir: dist/
           exclude: |
             **/.git*
-            **/.git*/**
             **/.github/**
             **/node_modules/**
-            **/prihlasovaci_udaje.php
