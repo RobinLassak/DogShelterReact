@@ -24,10 +24,9 @@ jobs:
 
       - name: Build (Vite)
         run: npm run build
-        # POZOR: ve vite.config.* musí být:
-        # export default defineConfig({ base: '/DogsShelterReact/' })
+        # vite.config.js musí mít: base: '/DogsShelterReact/'
 
-      - name: Deploy via FTPS (mirror/clean)
+      - name: Deploy via FTPS (mirror only dist CONTENTS)
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
@@ -36,13 +35,12 @@ jobs:
           protocol: ftps
           port: 21
           passive: true
-          # na Endoře typicky /web/ je kořen hostingu
+          # cílová složka na serveru
           server-dir: ${{ secrets.FTP_DIR }}DogsShelterReact/
-          # nahráváme OBSAH dist/
-          local-dir: dist/
-          dangerous-clean-slate: true # <<< smaže na serveru soubory, které v buildu nejsou
+          # <<< nahrává se jen OBSAH této složky
+          local-dir: ./dist/
+          # vyčistí cílovou složku a zrcadlí přesně to, co je v dist/
+          dangerous-clean-slate: true
+          # nic dalšího nevyřazujeme – nahrává se jen to, co je v dist/
           exclude: |
-            **/.git*
-            **/.github/**
-            **/node_modules/**
             **/.DS_Store
