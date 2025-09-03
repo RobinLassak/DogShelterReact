@@ -6,29 +6,28 @@ on:
   workflow_dispatch: {}
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20" # aktuální LTS
+          node-version: "20"
           cache: "npm"
 
       - name: Install dependencies
-        run: |
-          if [ -f package-lock.json ]; then
-            npm ci
-          else
-            npm install
-          fi
+        run: npm ci
 
-      - name: Build project
+      - name: Build (Vite)
         run: npm run build
+        # POZOR: ve vite.config.* musí být:
+        # export default defineConfig({ base: '/DogsShelterReact/' })
 
-      - name: Deploy via FTPS
+      - name: Deploy via FTPS (mirror/clean)
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
@@ -36,12 +35,14 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftps
           port: 21
+          passive: true
+          # na Endoře typicky /web/ je kořen hostingu
           server-dir: ${{ secrets.FTP_DIR }}DogsShelterReact/
-          local-dir: ./dist/
-          dangerous-clean-slate: false
+          # nahráváme OBSAH dist/
+          local-dir: dist/
+          dangerous-clean-slate: true # <<< smaže na serveru soubory, které v buildu nejsou
           exclude: |
             **/.git*
-            **/.git*/**
             **/.github/**
             **/node_modules/**
-
+            **/.DS_Store
