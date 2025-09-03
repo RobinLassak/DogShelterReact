@@ -36,9 +36,12 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftps
           port: 21
-          server-dir: ${{ secrets.FTP_DIR }}DogsShelterReact/ # ujisti se, že tato složka na FTP existuje
-          local-dir: dist/
+          server-dir: ${{ secrets.FTP_DIR }}DogsShelterReact/
+          local-dir: ./dist/
+          dangerous-clean-slate: false
           exclude: |
             **/.git*
+            **/.git*/**
             **/.github/**
             **/node_modules/**
+
