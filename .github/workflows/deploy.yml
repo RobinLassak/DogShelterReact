@@ -26,7 +26,18 @@ jobs:
         run: npm run build
         # vite.config.js musí mít: base: '/DogsShelterReact/'
 
-      - name: Deploy via FTPS (mirror only dist CONTENTS)
+      - name: Check if dist exists
+        id: check
+        run: |
+          if [ -d "dist" ]; then
+            echo "has_dist=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_dist=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      # === Deploy, varianta A: dist existuje ===
+      - name: Deploy via FTPS (upload dist contents)
+        if: steps.check.outputs.has_dist == 'true'
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
@@ -35,12 +46,26 @@ jobs:
           protocol: ftps
           port: 21
           passive: true
-          # cílová složka na serveru
           server-dir: ${{ secrets.FTP_DIR }}DogsShelterReact/
-          # <<< nahrává se jen OBSAH této složky
           local-dir: ./dist/
-          # vyčistí cílovou složku a zrcadlí přesně to, co je v dist/
           dangerous-clean-slate: true
-          # nic dalšího nevyřazujeme – nahrává se jen to, co je v dist/
           exclude: |
             **/.DS_Store
+
+      # === Deploy, varianta B: dist NEexistuje → čistý wipe cílové složky ===
+      - name: Deploy empty (wipe remote)
+        if: steps.check.outputs.has_dist != 'true'
+        run: mkdir -p empty
+      - name: Wipe remote dir via FTPS
+        if: steps.check.outputs.has_dist != 'true'
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          port: 21
+          passive: true
+          server-dir: ${{ secrets.FTP_DIR }}DogsShelterReact/
+          local-dir: ./empty/
+          dangerous-clean-slate: true
