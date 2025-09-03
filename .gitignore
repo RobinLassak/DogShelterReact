@@ -1,12 +1,43 @@
-# Ignorovat VŠECHNO kromě důležitých souborů
-*
+# Ignorovat nepotřebné soubory a složky
+node_modules/
+package-lock.json
+eslint.config.js
+vite.config.js
+README.md
+public/
 
-# Povolit jen tyto důležité věci:
+# Ignorovat cache a dočasné soubory
+.cache/
+.parcel-cache/
+.eslintcache
+*.log
+*.tmp
+*.temp
+
+# Ignorovat editor soubory
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Ignorovat OS soubory
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Ignorovat environment soubory
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Povolit všechny soubory v src a dist složkách
 !src/
+!src/**
 !dist/
-!package.json
-!.gitignore
-
-# Ignorovat i uvnitř povolených složek:
-src/node_modules/
-dist/node_modules/
+!dist/**
