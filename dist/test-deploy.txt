@@ -1,1 +1,1 @@
-Druhy deploy projektu na endoru - test
+Treti deploy projektu na endoru - test
