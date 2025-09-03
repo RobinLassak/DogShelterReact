@@ -2,7 +2,6 @@
 node_modules/
 eslint.config.js
 vite.config.js
-README.md
 
 # Ignorovat cache a dočasné soubory
 .cache/
