@@ -1,0 +1,27 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  width: 500px;
+}
+
+.item {
+  display: flex;
+  height: 45px;
+  padding: 0 15px;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #f4f2f3;
+  &:nth-child(even) {
+    background-color: #c0a9bd;
+  }
+}
+
+.btn-delete {
+  color: #64766a !important;
+  font-weight: bolder !important;
+  border: 2px solid #64766a !important;
+  border-radius: 50% !important;
+  height: 25px !important;
+  width: 25px !important;
+  cursor: pointer !important;
+}
